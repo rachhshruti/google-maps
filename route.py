@@ -301,8 +301,52 @@ def findRoute(mapData):
 	elif routingAlgo=="astar":
 		return astar(mapData)
 
+'''
+Prints the path containing the list of intermediate cities along with their distances and time
+assuming that the speed limits are being followed
+Input:
+	route- list of intermediate cities
+	mapData- dictionary containing the list of cities along with the information about their 
+			 neighboring cities			
+'''
+def printPath(route,mapData):
+	totalTime=0
+	cities=""
+	for i in range(0,len(route)-1):
+		cities=cities+route[i]+" "
+		for j in mapData[route[i]]:
+			if route[i+1] == j.keys()[0]:
+				val=j.values()[0]
+				time=round((float(val[0])/float(val[1]))*60,2)
+				print "Go to ",route[i+1]," on ",val[2].strip()," highway for ",val[0]," miles.\nEstimated time is: ",str(time)," mins."
+	return cities+route[i+1]
+
+'''
+Formats the output in human-readable format giving the list of directions consisting of 
+intermediate cities, times, distances and then prints a machine readable format as specified.
+Input:
+	path- dictionary containing the computed (distance,time,scenic,segment,path) for the end-city
+	mapData- dictionary containing the list of cities along with the information about their 
+			 neighboring cities			
+'''
+def formatOutput(path,mapData):
+	route=path["path"].split("\n")
+	cities=printPath(route,mapData)
+	print "Your destination has been reached."
+	totTime=path["time"]
+	if(totTime>=60):
+		totHours=int(totTime)/60
+		totMins=totTime%60
+		print "The total time is: ",totHours," hour ",totMins," mins."
+	else:
+		print "The total time is: ",totTime," mins."
+	print "Total number of turns (segments): ",path["segment"]
+	print "Distance spent on highways: ",path["scenic"]
+	print "The total distance is: ",path["distance"]," miles."
+	print str(path["distance"])+" "+str(round(float(path["time"])/60,4))+" "+cities
 
 # Runs the code
+#start=time.time()
 if routingOpt not in ["distance","time","scenic","segment"]:
 	print "Invalid routing option!\nIt must be one of the [distance,time,scenic,segment]"
 elif routingAlgo not in ["bfs","dfs","ids","astar"]:
@@ -315,3 +359,9 @@ else:
 		print "You are already at your destination."
 	else:
 		path=findRoute(mapData)
+		if path:
+			formatOutput(path,mapData)
+		else:
+			print "No path found between start city ", startCity," and end city ",endCity
+#end=time.time()
+#print "time to run the algorithm: ",round((end-start),3)
