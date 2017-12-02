@@ -62,7 +62,7 @@ Output:
 def bfs(mapData):
 	visitedCities=[startCity]
 	dist={}
-	dist[startCity]={"distance":0,"time":0,"path":startCity}
+	dist[startCity]={"distance":0,"time":0,"segment":0,"scenic":0,"path":startCity}
 	#maxFringe=0
 	while len(visitedCities)>0:
 		currCity=visitedCities.pop(0)
@@ -85,7 +85,7 @@ Output:
 def dfs(mapData,k=sys.maxint):
 	visitedCities=[startCity]
 	dist={}
-	dist[startCity]={"distance":0,"time":0,"path":startCity}
+	dist[startCity]={"distance":0,"time":0,"segment":0,"scenic":0,"path":startCity}
 	while len(visitedCities)>0:
 		currCity=visitedCities.pop()
 		if dist[currCity]["segment"]<k:
@@ -96,6 +96,25 @@ def dfs(mapData,k=sys.maxint):
 		return {}
 	else:
 		return dist[endCity]
+
+'''
+Runs IDS algorithm to find a path between start city and end city, if any. It may or may not
+return an optimal solution depending on the given routing option
+Input:
+	mapData- dictionary containing the list of cities along with the information about their 
+			 neighboring cities
+Output:
+	dictionary containing the computed (distance,time,scenic,segment,path) for the end-city
+'''
+def ids(mapData):
+	k=1
+	path={}
+	while 1:
+		path=dfs(mapData,k)
+		if path or k==10000:
+			break
+		k=k+1
+	return path
 
 '''
 Builds a graph storing the distances of adjacent cities in a dictionary	
