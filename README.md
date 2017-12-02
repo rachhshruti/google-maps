@@ -1,6 +1,7 @@
 # Implementation of Google Maps
 
 - Created an implementation similar to Google Maps to find best possible driving directions from a source city to destination given the datasets for cities and highways in USA.
+- Implemented and compared the performances for various routing algorithms such as BFS, DFS, IDS and A* search.
 
 # Running the Code:
   `python route.py start-city end-city routing-opt routing-algorithm`

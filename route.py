@@ -5,6 +5,51 @@ from math import *
 '''
 Description: The code is used to find a path between the start city and end city 
 depending on the routing option and routing algorithm given as command-line arguments.
+(1) The following algorithms work well for each of the routing options:
+	distance-astar
+	scenic-astar for some cases when the heuristic function does not overestimate, otherwise bfs.
+	time-astar
+	segment-bfs
+(2) DFS runs the fastest in terms of computation time.
+	The computation time for different algorithms when running 100 times for 
+	Espanola,_Ontario Dallas,_Texas input are as follows:
+		bfs: 193.442 seconds
+		dfs: 87.221 seconds
+		ids: 7898.473 seconds
+		astar: 135.598 seconds
+(3) A* search takes the least amount of memory computed in terms of the maximum length of the fringe.
+	The amount of memory used in each of the routing algorithm for the input to find path between 
+	Bloomington,_Indiana San_Francisco are as follows:
+		algorithm     Memory(max length of fringe)
+			bfs           	215
+		    	dfs     	1265
+			ids 		286
+			astar           192
+(4) The following heuristic functions are used in case of A* search depending on the routing option:
+		distance: Haversine distance is used to measure the distance between the current city and the
+				  end city based on given latitudes and longitudes. If no geographical co-ordinates are
+				  present for the current city, then it checks if the co-ordinates are present for parent 
+				  city, if yes, it computes the haversine distance from parent city to end city and 
+				  subtracts the distance between parent city and current city. If not, check if any of 
+				  the neighbors has the co-ordinates, if yes, it computes the haversine distance from 
+				  neighbor to end city and adds the distance between current city and neighbor city. If not,
+				  set the heuristic function for current city to maximum integer value so that the node is
+				  not considered when finding the best path.
+	  	time: 	  Time is estimated by dividing the haversine distance computed as above by maximum speed 
+	  			  limit between any of the cities in road-segments.txt file so that it will not over-estimate
+	  			  in any of the cases but it will not be optimal as well for all cases.
+	    segment:  Number of segments can be estimated by dividing the haversine distance and maximum 
+	    		  distance between any two cities in road-segments.txt file. If it is known how much 
+	    		  distance corresponds to one segment, it can be correctly estimated but since this
+	    		  is not known, if we take the maximum possible distance corresponding to 1 segment,
+	    		  the computation will never over-estimate in any of the cases.
+	    scenic:   Scenic distance is estimated by taking half of the haversine distance between current 
+	    		  city and end city, so there are chances of over-estimating the scenic distance. Since the
+	    		  scenic distance can be anywhere between 0 and the haversine distance and no other 
+	    		  information is known, so it is estimated considering the average of both.
+	Heuristic functions can be improved if the dataset is accurate. 
+(5) Skagway,_Alaska is the city furthest from Bloomington,_Indiana having the shortest path distance of 4543
+    miles.
 @author Shruti Rachh
 '''
 
